@@ -1,19 +1,76 @@
-// console.log(123)
+class Calc {
+  static #value = ''
+  static #NAME = 'calc'
+  static #isDot = false
 
-//====== Alert(), confirm(), prompt()
-// alert('Hello World')
-// let result = confirm('18+')
+  static add = (newValue) => {
+    if (isNaN(this.#value[this.#value.length - 2])) {
+      if (
+        Number(this.#value[this.#value.length - 1]) === 0 &&
+        this.#isDot == false
+      ) {
+        return null
+      }
+    }
+    console.log('=======>', this.#value)
+    this.#value = this.#value.concat(newValue)
+    this.#output()
+  }
+  static #output = () => {
+    this.#save()
+    window.output.innerHTML = this.#value
+  }
 
-// if (result === true) {
-//   alert('Wellcome')
-// }
+  static dot = () => {
+    if (this.#isDot) {
+      return null
+    }
 
-// prompt('який зріст?', 0)
+    if (isNaN(this.#value[this.#value.length - 1])) {
+      return null
+    }
 
-// print()
+    this.#value = this.#value.concat('.')
+    this.#output()
+    this.#isDot = true
+  }
 
-//=============
-// location
-// location.search
-// location.search.split('&')
-// location.substring(1).search.split('&')[0].split('=')
+  static op = (opValue) => {
+    if (isNaN(this.#value[this.#value.length - 1])) {
+      return null
+    }
+    this.#value = this.#value.concat(opValue)
+    this.#output()
+    this.#isDot = false
+  }
+
+  static reset = () => {
+    this.#value = ''
+    this.#isDot = false
+    this.#output()
+  }
+
+  static result = () => {
+    this.#value = String(eval(this.#value))
+    this.#output()
+  }
+
+  static #save = () => {
+    window.localStorage.setItem(this.#NAME, this.#value)
+  }
+
+  static #load = () => {
+    this.#value =
+      window.localStorage.getItem(this.#NAME) || ''
+  }
+
+  static init = () => {
+    this.#load()
+    // this.#output()
+    console.log('Calc is init')
+  }
+}
+
+Calc.init()
+
+window.calc = Calc
